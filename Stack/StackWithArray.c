@@ -11,7 +11,7 @@ int pop();
 void traverse();
 int isEmpty();
 int isFull();
-int peek();     // Return TOP of the stack
+int peek(); // Return TOP of the stack
 
 int main()
 {
@@ -28,7 +28,7 @@ int main()
     pop();
     pop();
     // pop();   Underflow EXIT;
-    traverse();     // Underflow
+    traverse(); // Underflow
     return 0;
 }
 
@@ -51,7 +51,7 @@ int pop()
     if (isEmpty())
     {
         printf("\nStack is empty. UNDERFLOW!");
-        exit(-1);
+        exit(1);
     }
     int data = stack_arr[top];
     printf("\nDeleted %d from stack.", data);
@@ -85,9 +85,12 @@ int isEmpty()
     return 0;
 }
 
-int peek() {
-    if (isEmpty()) {
+int peek()
+{
+    if (isEmpty())
+    {
         printf("\nStack is empty. UNDERFLOW!");
+        exit(1);
     }
     return stack_arr[top];
 }
