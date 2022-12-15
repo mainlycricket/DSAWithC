@@ -1,0 +1,5 @@
+*.exe
+/*.c
+/CPP
+/.vscode
+/.idea
