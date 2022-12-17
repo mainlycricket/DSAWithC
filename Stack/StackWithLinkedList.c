@@ -14,6 +14,7 @@ struct node *top = NULL; // Global TOP pointer
 void push(int);
 int pop();
 void traverse();
+int peek();
 
 int main()
 {
@@ -52,7 +53,7 @@ void push(int data)
 int pop()
 {
     int data;
-    struct node *temp;
+    struct node *temp = top;
 
     if (top == NULL)
     {
@@ -61,10 +62,10 @@ int pop()
     }
 
     data = top->data;
-    temp = top;
     top = top->next;
 
     free(temp);
+    temp = NULL;
     return data;
 }
 
@@ -83,4 +84,14 @@ void traverse()
         printf("\t%d", temp->data);
         temp = temp->next;
     }
+}
+
+int peek()
+{
+    if (top == NULL)
+    {
+        printf("\nStack UNDERFLOW!");
+        exit(1);
+    }
+    return top->data;
 }
