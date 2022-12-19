@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #define MAX 100
 
-int bracketsStack[MAX], top = -1;
+char bracketsStack[MAX];
+int top = -1;
 
 int verifyExpression(char[]);
 int matchBrackets(char);
@@ -51,11 +52,11 @@ int verifyExpression(char exp[])
     if (top == -1)
         return 1;
 
-    else {
+    else
+    {
         printf("\nOpening braces are more than closing braces");
         return 0;
     }
-        
 }
 
 int matchBrackets(char bracket)
@@ -63,7 +64,7 @@ int matchBrackets(char bracket)
 
     char lastBracket;
 
-    if (top == - 1)
+    if (top == -1)
     {
         printf("\nClosing braces are more than opening braces!");
         return 0;
