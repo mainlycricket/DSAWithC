@@ -60,7 +60,7 @@ void traverse()
 {
     if (front == -1)
     {
-        printf("\nUnderflow!");
+        printf("\nQueue is empty. Underflow!");
         exit(1);
     }
 
