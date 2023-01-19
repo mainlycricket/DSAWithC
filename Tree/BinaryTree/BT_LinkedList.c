@@ -77,12 +77,12 @@ void preOrder(struct node *root)
 void inOrder(struct node *root)
 {
     if (root->left != NULL)
-        preOrder(root->left);
+        inOrder(root->left);
 
     printf("%c ", root->data);
 
     if (root->right != NULL)
-        preOrder(root->right);
+        inOrder(root->right);
 }
 
 void postOrder(struct node *root)
