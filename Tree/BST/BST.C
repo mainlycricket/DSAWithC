@@ -1,22 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct tree
+struct node
 {
-    struct tree *left;
+    struct node *left;
     int data;
-    struct tree *right;
+    struct node *right;
 };
 
-struct tree *createNode(int);
-void insert(struct tree **, int);
-void preOrder(struct tree *);
-void inOrder(struct tree *);
-void postOrder(struct tree *);
+struct node *createNode(int);
+void insert(struct node **, int);
+void preOrder(struct node *);
+void inOrder(struct node *);
+void postOrder(struct node *);
+struct node *deleteNode(struct node **, int);
+struct node *findMin(struct node *);
 
 int main()
 {
-    struct tree *root = (struct tree *)malloc(sizeof(struct tree));
+    struct node *root = (struct node *)malloc(sizeof(struct node));
     root = NULL;
 
     insert(&root, 10);
@@ -24,6 +26,8 @@ int main()
     insert(&root, 20);
     insert(&root, 25);
     insert(&root, 1);
+
+    deleteNode(&root, 10);
 
     printf("\nPre-order: ");
     preOrder(root);
@@ -37,7 +41,7 @@ int main()
     return 0;
 }
 
-void insert(struct tree **root, int data)
+void insert(struct node **root, int data)
 {
     if (*root == NULL)
         *root = createNode(data);
@@ -45,19 +49,72 @@ void insert(struct tree **root, int data)
     else if ((*root)->data > data)
         insert(&(*root)->left, data);
 
-    else
+    else if ((*root)->data < data)
         insert(&(*root)->right, data);
 }
 
-struct tree *createNode(int data)
+struct node *deleteNode(struct node **root, int data)
 {
-    struct tree *temp = (struct tree *)malloc(sizeof(struct tree));
+    if (*root == NULL)
+        return *root;
+
+    if ((*root)->data < data)
+        (*root)->right = deleteNode(&(*root)->right, data);
+
+    else if ((*root)->data > data)
+        (*root)->left = deleteNode(&(*root)->left, data);
+
+    else
+    {
+        if ((*root)->left == NULL && (*root)->right == NULL)
+        {
+            free(*root);
+            *root = NULL;
+        }
+
+        else if ((*root)->left == NULL)
+        {
+            struct node *temp = *root;
+            *root = temp->right;
+            free(temp);
+            temp = NULL;
+        }
+
+        else if ((*root)->right == NULL)
+        {
+            struct node *temp = *root;
+            *root = temp->left;
+            free(temp);
+            temp = NULL;
+        }
+
+        else
+        {
+            struct node *temp = findMin((*root)->right);
+            (*root)->data = temp->data;
+            (*root)->right = deleteNode(&(*root)->right, temp->data);
+        }
+    }
+
+    return *root;
+}
+
+struct node *findMin(struct node *ptr)
+{
+    while (ptr->left != NULL)
+        ptr = ptr->left;
+    return ptr;
+}
+
+struct node *createNode(int data)
+{
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
     temp->data = data;
     temp->left = temp->right = NULL;
     return temp;
 }
 
-void preOrder(struct tree *ptr)
+void preOrder(struct node *ptr)
 {
     printf("%d ", ptr->data);
 
@@ -68,24 +125,24 @@ void preOrder(struct tree *ptr)
         preOrder(ptr->right);
 }
 
-void inOrder(struct tree *ptr)
+void inOrder(struct node *ptr)
 {
     if (ptr->left != NULL)
-        preOrder(ptr->left);
+        inOrder(ptr->left);
 
     printf("%d ", ptr->data);
 
     if (ptr->right != NULL)
-        preOrder(ptr->right);
+        inOrder(ptr->right);
 }
 
-void postOrder(struct tree *ptr)
+void postOrder(struct node *ptr)
 {
     if (ptr->left != NULL)
-        preOrder(ptr->left);
+        postOrder(ptr->left);
 
     if (ptr->right != NULL)
-        preOrder(ptr->right);
+        postOrder(ptr->right);
 
     printf("%d ", ptr->data);
 }
