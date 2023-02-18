@@ -15,6 +15,10 @@ struct node *insertRight(struct node **, char);
 void preOrder(struct node *);
 void inOrder(struct node *);
 void postOrder(struct node *);
+void levelOrder(struct node *);
+
+char queue[10];
+int upperBound = -1;
 
 int main()
 {
@@ -37,6 +41,9 @@ int main()
 
     printf("\nPost-Order Traversal: ");
     postOrder(m);
+
+    printf("\nLevel-Order Traversal: ");
+    levelOrder(m);
 
     return 0;
 }
@@ -94,4 +101,29 @@ void postOrder(struct node *root)
         postOrder(root->right);
 
     printf("%c ", root->data);
+}
+
+void levelOrder(struct node *ptr)
+{
+    if (ptr == NULL)
+        return;
+
+    struct node *queue[100];
+    int front = -1, rear = -1;
+    queue[++rear] = ptr;
+    ++front;
+
+    while (front <= rear)
+    {
+        struct node *current = queue[front];
+        ++front;
+
+        printf("%c ", current->data);
+
+        if (current->left != NULL)
+            queue[++rear] = current->left;
+
+        if (current->right != NULL)
+            queue[++rear] = current->right;
+    }
 }
