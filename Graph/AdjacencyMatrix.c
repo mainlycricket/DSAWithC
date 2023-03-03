@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define MAX 50
 
 struct graph
@@ -20,6 +21,9 @@ int areNodesConnected(struct graph *, char, char);
 int getVertexIndex(struct graph *, char);
 void listVertices(struct graph *);
 
+void DFS(struct graph *, char);
+void BFS(struct graph *, char);
+
 int main()
 {
     struct graph *graph1 = createGraph();
@@ -28,6 +32,7 @@ int main()
     addVertex(graph1, 'B');
     addVertex(graph1, 'C');
     addVertex(graph1, 'D');
+    addVertex(graph1, 'E');
 
     addEdge(graph1, 'A', 'B');
     addEdge(graph1, 'A', 'C');
@@ -37,6 +42,7 @@ int main()
     addEdge(graph1, 'B', 'D');
 
     addEdge(graph1, 'C', 'D');
+    addEdge(graph1, 'D', 'E');
 
     printAdjacencyMatrix(graph1);
     listConnectedNodes(graph1, 'A');
@@ -46,12 +52,15 @@ int main()
     else
         printf("\n'B' & 'A' aren't connected!");
 
+    DFS(graph1, 'A');
+    BFS(graph1, 'A');
+
     return 0;
 }
 
 struct graph *createGraph()
 {
-    struct graph *newGraph = (struct graph *)malloc(sizeof(graph));
+    struct graph *newGraph = (struct graph *)malloc(sizeof(struct graph));
     newGraph->verticesCount = 0;
 
     for (int i = 0; i < MAX; i++)
@@ -145,4 +154,58 @@ void listVertices(struct graph *ptr)
 {
     for (int i = 0; i < ptr->verticesCount; i++)
         printf("%c ", ptr->vertices[i]);
+}
+
+void DFS(struct graph *ptr, char start)
+{
+    printf("\nDFS: ");
+
+    char visited[ptr->verticesCount], stack[ptr->verticesCount];
+    int top = -1, vCount = -1;
+
+    stack[++top] = start;
+
+    while (top != -1)
+    {
+        char curNode = stack[top];
+        int curIndex = getVertexIndex(ptr, curNode);
+        top--;
+        visited[++vCount] = curNode;
+        printf("%c ", curNode);
+
+        for (int i = 0; i < ptr->verticesCount; i++)
+            if (ptr->matrix[curIndex][i] == 1 
+                && !strpbrk(visited, &ptr->vertices[i])
+                && !strpbrk(top, &ptr->vertices[i]))
+                stack[++top] = ptr->vertices[i];
+    }
+}
+
+void BFS(struct graph *ptr, char start)
+{
+    printf("\nBFS: ");
+
+    char visited[ptr->verticesCount], queue[ptr->verticesCount];
+    int front = -1, rear = -1, vCount = -1;
+
+    queue[++rear] = start;
+    visited[++vCount] = start;
+    ++front;
+
+    while (front <= rear)
+    {
+        char curNode = queue[front];
+        int curIndex = getVertexIndex(ptr, curNode);
+
+        for (int i = 0; i < ptr->verticesCount; i++)
+            if (ptr->matrix[curIndex][i] == 1 && !strpbrk(visited, &(ptr->vertices[i])))
+            {
+                queue[++rear] = ptr->vertices[i];
+                visited[++vCount] = ptr->vertices[i];
+            }
+        ++front;
+    }
+
+    for (int i = 0; i <= vCount; i++)
+        printf("%c ", visited[i]);
 }
