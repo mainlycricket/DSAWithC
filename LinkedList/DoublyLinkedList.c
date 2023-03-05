@@ -10,6 +10,7 @@ struct node
 
 void insertAtBeg(struct node **, int);
 void insertAtEnd(struct node **, int);
+void insertAtPos(struct node **, int, int);
 
 void deleteAtBeg(struct node **);
 void deleteAtEnd(struct node **);
@@ -21,14 +22,17 @@ int main()
     struct node *head = (struct node *)malloc(sizeof(struct node));
     head = NULL;
 
-    insertAtBeg(&head, 20);     // 20
+    insertAtBeg(&head, 20); // 20
     deleteAtBeg(&head);     // Empty List
 
-    insertAtBeg(&head, 10);     // 10
-    insertAtEnd(&head, 30);     // 10, 30
+    insertAtBeg(&head, 10); // 10
+    insertAtEnd(&head, 30); // 10, 30
 
     deleteAtEnd(&head);     // 10
-    insertAtEnd(&head, 40);     // 10, 40
+    insertAtEnd(&head, 40); // 10, 40
+
+    insertAtPos(&head, 20, 2);
+    insertAtPos(&head, 30, 3);
 
     traverse(head);
 
@@ -66,6 +70,36 @@ void insertAtEnd(struct node **head, int data)
     ptr->next = temp;
 }
 
+void insertAtPos(struct node **head, int data, int pos)
+{
+    if (pos == 1)
+    {
+        insertAtBeg(&(*head), data);
+        return;
+    }
+
+    int count = 0;
+    struct node *ptr = *head;
+    while (count < pos - 2)
+    {
+        if (ptr == NULL)
+        {
+            printf("\nNot enough nodes!");
+            exit(1);
+        }
+
+        ptr = ptr->next;
+        ++count;
+    }
+
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->data = data;
+    temp->prev = ptr;
+    temp->next = ptr->next;
+    ptr->next = temp;
+
+}
+
 void deleteAtEnd(struct node **head)
 {
     if (*head == NULL)
@@ -98,7 +132,7 @@ void deleteAtBeg(struct node **head)
         printf("\nList is empty!");
         exit(1);
     }
-    
+
     struct node *ptr = *head;
     *head = ptr->next;
 
