@@ -12,7 +12,7 @@ void insertAtEnd(struct node **, int);
 
 void deleteFromBeginning(struct node **);
 void deleteFromEnd(struct node **);
-void deleteNode(struct node **, int);
+void deleteNodeByData(struct node **, int);
 
 int count(struct node *);
 void traverse(struct node *);
@@ -36,7 +36,7 @@ int main()
 
 	deleteFromBeginning(&tail);
 	deleteFromEnd(&tail);
-	deleteNode(&tail, 30);
+	deleteNodeByData(&tail, 30);
 
 	traverse(tail);
 
@@ -127,10 +127,9 @@ void deleteFromEnd(struct node **tail)
 	*tail = ptr;
 }
 
-void deleteNode(struct node **tail, int data)
+void deleteNodeByData(struct node **tail, int data)
 {
-	struct node *ptr = *tail;
-	if (ptr == NULL)
+	if (*tail == NULL)
 	{
 		printf("\nLinked List is empty. UNDERFLOW!");
 		exit(1);
@@ -146,18 +145,19 @@ void deleteNode(struct node **tail, int data)
 	{
 		struct node *ptr = (*tail)->link;
 
-		do
-		{
-			ptr = ptr->link;
-		} while (ptr->link->data != data && ptr != (*tail)->link);
+		while (ptr->link != *tail && ptr->link->data != data)
+			ptr = ptr->link; 
 
 		if (ptr->link->data != data)
 		{
 			printf("\nNode not found!");
 			exit(1);
 		}
-		free(ptr->link);
-		ptr->link = ptr->link->link;
+
+		struct node *temp = ptr->link;
+		ptr->link = temp->link;
+		free(temp);
+		temp = NULL;
 	}
 }
 
