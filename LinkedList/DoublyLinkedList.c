@@ -8,13 +8,15 @@ struct node
     struct node *next;
 };
 
-void insertAtBeg(struct node **, int);
+void insertAtBeginning(struct node **, int);
 void insertAtEnd(struct node **, int);
 void insertAtPos(struct node **, int, int);
 
-void deleteAtBeg(struct node **);
+void deleteAtBeginning(struct node **);
 void deleteAtEnd(struct node **);
+void deleteNodeByData(struct node **, int);
 
+void reverseList(struct node **);
 void traverse(struct node *);
 
 int main()
@@ -22,24 +24,31 @@ int main()
     struct node *head = (struct node *)malloc(sizeof(struct node));
     head = NULL;
 
-    insertAtBeg(&head, 20); // 20
-    deleteAtBeg(&head);     // Empty List
+    insertAtBeginning(&head, 20); // 20
+    deleteAtBeginning(&head);     // Empty List
 
-    insertAtBeg(&head, 10); // 10
-    insertAtEnd(&head, 30); // 10, 30
+    insertAtBeginning(&head, 10); // 10
+    insertAtEnd(&head, 30);       // 10, 30
 
     deleteAtEnd(&head);     // 10
     insertAtEnd(&head, 40); // 10, 40
 
-    insertAtPos(&head, 20, 2);
-    insertAtPos(&head, 30, 3);
+    insertAtPos(&head, 20, 2); // 10, 20, 40
+    insertAtPos(&head, 30, 3); // 10, 20, 30, 40
 
+    deleteNodeByData(&head, 30); // 10, 20, 40
+
+    printf("\nList: ");
+    traverse(head);
+
+    reverseList(&head);
+    printf("\nReversed List: ");
     traverse(head);
 
     return 0;
 }
 
-void insertAtBeg(struct node **head, int data)
+void insertAtBeginning(struct node **head, int data)
 {
     struct node *temp = (struct node *)malloc(sizeof(struct node));
     temp->data = data;
@@ -74,7 +83,7 @@ void insertAtPos(struct node **head, int data, int pos)
 {
     if (pos == 1)
     {
-        insertAtBeg(&(*head), data);
+        insertAtBeginning(&(*head), data);
         return;
     }
 
@@ -97,7 +106,6 @@ void insertAtPos(struct node **head, int data, int pos)
     temp->prev = ptr;
     temp->next = ptr->next;
     ptr->next = temp;
-
 }
 
 void deleteAtEnd(struct node **head)
@@ -125,7 +133,7 @@ void deleteAtEnd(struct node **head)
     ptr = NULL;
 }
 
-void deleteAtBeg(struct node **head)
+void deleteAtBeginning(struct node **head)
 {
     if (*head == NULL)
     {
@@ -143,6 +151,61 @@ void deleteAtBeg(struct node **head)
     ptr = NULL;
 }
 
+void deleteNodeByData(struct node **head, int data)
+{
+    if (*head == NULL)
+    {
+        printf("\nList is empty. UNDERFLOW!");
+        exit(1);
+    }
+
+    if ((*head)->data == data)
+    {
+        deleteAtBeginning(&(*head));
+        return;
+    }
+
+    struct node *ptr = *head;
+
+    while (ptr->next->data != data)
+    {
+        if (ptr->next == NULL)
+        {
+            printf("\nNo node found with value %d", data);
+            exit(1);
+        }
+
+        ptr = ptr->next;
+    }
+
+    struct node *temp = ptr->next;
+    ptr->next = temp->next;
+    if (temp->next != NULL) {
+        temp->next->prev = ptr;
+    }
+    free(temp);
+    temp = NULL;
+}
+
+void reverseList(struct node **head)
+{
+    struct node *prev = NULL;
+    struct node *current = *head;
+    struct node *next;
+
+    while (current != NULL) {
+        next = current->next;
+        current->next = prev;
+        current->prev = next;
+        prev = current;
+        current = next;
+    }
+
+    *head = prev;
+    (*head)->prev = NULL;
+
+}
+
 void traverse(struct node *ptr)
 {
     if (ptr == NULL)
@@ -151,7 +214,6 @@ void traverse(struct node *ptr)
         exit(1);
     }
 
-    printf("\nList: ");
     while (ptr != NULL)
     {
         printf("%d ", ptr->data);
