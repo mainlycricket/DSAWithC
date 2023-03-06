@@ -21,8 +21,7 @@ void traverseList(struct node *);
 
 int main()
 {
-    struct node *head = (struct node *)malloc(sizeof(struct node));
-    head = NULL;
+    struct node *head = NULL;
 
     insertAtEnd(&head, 50);       // 50
     insertAtBeginning(&head, 10); // 10, 50
@@ -30,8 +29,8 @@ int main()
     insertAtEnd(&head, 30);       // 10, 50, 30
     insertAtBeginning(&head, 20); // 20, 10, 50, 30
 
-    insertAtPos(&head, 55, 2); // 20, 10, 55, 50, 30
-    insertAtPos(&head, 44, 0); // 44, 20, 10, 55, 50, 30
+    insertAtPos(&head, 55, 2); // 20, 55, 10, 50, 30
+    insertAtPos(&head, 44, 1); // 44, 20, 55, 10, 50, 30
 
     printf("\nTravering List: ");
     traverseList(head);
@@ -86,6 +85,12 @@ void insertAtEnd(struct node **head, int data)
 
 void insertAtPos(struct node **head, int data, int pos)
 {
+    if (pos <= 0)
+    {
+        printf("\nInvalid position!");
+        exit(1);
+    }
+
     if (pos == 1)
     {
         insertAtBeginning(&(*head), data);

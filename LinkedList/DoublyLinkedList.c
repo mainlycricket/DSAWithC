@@ -21,8 +21,7 @@ void traverse(struct node *);
 
 int main()
 {
-    struct node *head = (struct node *)malloc(sizeof(struct node));
-    head = NULL;
+    struct node *head = NULL;
 
     insertAtBeginning(&head, 20); // 20
     deleteAtBeginning(&head);     // Empty List

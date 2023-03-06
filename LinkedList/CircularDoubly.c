@@ -13,8 +13,7 @@ void traverse(struct node *);
 
 int main()
 {
-    struct node *head = (struct node *)malloc(sizeof(struct node));
-    head = NULL;
+    struct node *head = NULL;
 
     insertAtEnd(&head, 10);
     insertAtEnd(&head, 20);
