@@ -8,8 +8,12 @@ int main()
     int arr[] = {45, 43, 64, 34, 89, 2};
     int size = sizeof(arr) / sizeof(int);
 
+    printf("\nInitial Array: ");
     traverse(arr, size);
+
     insertionSort(arr, size);
+    
+    printf("\nSorted Array: ");
     traverse(arr, size);
 
     return 0;
@@ -31,7 +35,6 @@ void insertionSort(int arr[], int size)
 
 void traverse(int arr[], int size)
 {
-    printf("\nArray: ");
     for (int i = 0; i < size; i++)
         printf("%d ", arr[i]);
 }
